@@ -147,6 +147,7 @@ containing a value of this type.
         public static final int detailsText=0x7f040007;
         public static final int hybrid=0x7f040004;
         public static final int map=0x7f040006;
+        public static final int name=0x7f040008;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040001;
         public static final int pager=0x7f040005;
@@ -158,7 +159,8 @@ containing a value of this type.
         public static final int activity_map=0x7f030001;
         public static final int activity_zop=0x7f030002;
         public static final int fragment_friend=0x7f030003;
-        public static final int fragment_group=0x7f030004;
+        public static final int fragment_friend_item=0x7f030004;
+        public static final int fragment_group=0x7f030005;
     }
     public static final class string {
         public static final int action_settings=0x7f050012;
@@ -225,6 +227,8 @@ containing a value of this type.
         find the service-side assets. [CHAR LIMIT=25] 
          */
         public static final int common_signin_button_text_long=0x7f05000d;
+        public static final int friends=0x7f050013;
+        public static final int groups=0x7f050014;
     }
     public static final class style {
         /** 
