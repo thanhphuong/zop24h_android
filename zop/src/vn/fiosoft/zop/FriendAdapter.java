@@ -44,6 +44,7 @@ public class FriendAdapter extends ArrayAdapter<Friend> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		
+		viewHolder.mName.setText(friend.getName());
 		
 		return convertView;
 	}

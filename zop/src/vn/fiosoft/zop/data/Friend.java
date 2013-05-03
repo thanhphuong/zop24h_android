@@ -11,6 +11,10 @@ public class Friend {
 		this.latitude = 0;
 		this.longitude = 0;
 	}
+	
+	public Friend(String name, double latitude, double longitude){		
+		this.name = name;
+	}
 
 	public String getName() {
 		return name;
