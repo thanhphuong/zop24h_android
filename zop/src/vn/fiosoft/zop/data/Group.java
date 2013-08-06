@@ -1,24 +1,34 @@
 package vn.fiosoft.zop.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Group {
-	
+
+	private int id;
 	private String name;
-	public List<Friend> friends;
 	
 	public Group(){
-		setName("");
-		friends = new ArrayList<Friend>();
+		this.id = 0;
+		this.name = "";
 	}
-
+	
+	public Group(int id, String name){
+		this.id = id;
+		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	} 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 }

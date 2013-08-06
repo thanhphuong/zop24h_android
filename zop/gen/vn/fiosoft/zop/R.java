@@ -128,6 +128,10 @@ containing a value of this type.
          */
         public static final int zOrderOnTop=0x7f01000d;
     }
+    public static final class color {
+        public static final int pinned_header_background=0x7f060000;
+        public static final int pinned_header_text=0x7f060001;
+    }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
 
@@ -135,32 +139,33 @@ containing a value of this type.
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     
          */
-        public static final int activity_horizontal_margin=0x7f060000;
-        public static final int activity_vertical_margin=0x7f060001;
+        public static final int activity_horizontal_margin=0x7f070000;
+        public static final int activity_vertical_margin=0x7f070001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int marker=0x7f020001;
-        public static final int marker2=0x7f020002;
+        public static final int avatar=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int marker=0x7f020002;
+        public static final int marker2=0x7f020003;
     }
     public static final class id {
-        public static final int detailsText=0x7f040007;
+        public static final int help=0x7f040008;
         public static final int hybrid=0x7f040004;
         public static final int map=0x7f040006;
-        public static final int name=0x7f040008;
+        public static final int name=0x7f040005;
+        public static final int new_game=0x7f040007;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040001;
-        public static final int pager=0x7f040005;
         public static final int satellite=0x7f040002;
         public static final int terrain=0x7f040003;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
-        public static final int activity_map=0x7f030001;
-        public static final int activity_zop=0x7f030002;
-        public static final int fragment_friend=0x7f030003;
-        public static final int fragment_friend_item=0x7f030004;
-        public static final int fragment_group=0x7f030005;
+        public static final int activity_main_list_item=0x7f030001;
+        public static final int activity_map=0x7f030002;
+    }
+    public static final class menu {
+        public static final int map_menu=0x7f090000;
     }
     public static final class string {
         public static final int action_settings=0x7f050012;
@@ -241,11 +246,11 @@ containing a value of this type.
             backward-compatibility can go here.
         
          */
-        public static final int AppBaseTheme=0x7f070000;
+        public static final int AppBaseTheme=0x7f080000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f070001;
+        public static final int AppTheme=0x7f080001;
     }
     public static final class styleable {
         /** Attributes that can be used with a MapAttrs.

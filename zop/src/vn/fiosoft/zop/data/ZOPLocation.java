@@ -1,20 +1,21 @@
 package vn.fiosoft.zop.data;
 
-public class Friend {
-
+public class ZOPLocation {
 	private String name;
 	private double latitude;
 	private double longitude;
 
-	public Friend() {
+	public ZOPLocation() {
 		this.name = "";
 		this.latitude = 0;
-		this.longitude = 0;
+		this.longitude = 0;		
 	}
-	
-	public Friend(String name, double latitude, double longitude){		
+
+	public ZOPLocation(String name, double latitude, double longitude) {
 		this.name = name;
-	}
+		this.latitude = latitude;
+		this.longitude = longitude;		
+	}	
 
 	public String getName() {
 		return name;
@@ -39,5 +40,4 @@ public class Friend {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
-
 }
