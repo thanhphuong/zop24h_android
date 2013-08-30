@@ -2,7 +2,7 @@ package vn.fiosoft.zop.data;
 
 public class Group {
 
-	private int id;
+	private long id;
 	private String name;
 	
 	public Group(){
@@ -10,7 +10,7 @@ public class Group {
 		this.name = "";
 	}
 	
-	public Group(int id, String name){
+	public Group(long id, String name){
 		this.id = id;
 		this.name = name;
 	}
@@ -23,11 +23,11 @@ public class Group {
 		return name;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	

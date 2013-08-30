@@ -17,6 +17,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />    
     <!--
      The following two permissions are not required to use
      Google Maps Android API v2, but are recommended.
@@ -33,19 +36,17 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="vn.fiosoft.zop.MapActivity" 
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        <activity android:name="vn.fiosoft.zop.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="vn.fiosoft.zop.GroupActivity" android:label="@string/grouds"/>
+        <activity android:name="vn.fiosoft.zop.FriendActivity" android:label="@string/friends" />
         <activity
-            android:name="vn.fiosoft.zop.ZopActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
-        <activity
-            android:name="vn.fiosoft.zop.MainActivity"
+            android:name="vn.fiosoft.zop.MapActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
 
         <meta-data

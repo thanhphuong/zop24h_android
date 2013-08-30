@@ -149,20 +149,27 @@ containing a value of this type.
         public static final int marker2=0x7f020003;
     }
     public static final class id {
-        public static final int help=0x7f040008;
         public static final int hybrid=0x7f040004;
-        public static final int map=0x7f040006;
+        public static final int login=0x7f040008;
+        public static final int map=0x7f040009;
+        public static final int menu_add_friend=0x7f04000a;
+        public static final int menu_add_group=0x7f04000b;
+        public static final int menu_help=0x7f04000c;
         public static final int name=0x7f040005;
-        public static final int new_game=0x7f040007;
         public static final int none=0x7f040000;
         public static final int normal=0x7f040001;
+        public static final int password=0x7f040007;
         public static final int satellite=0x7f040002;
         public static final int terrain=0x7f040003;
+        public static final int username=0x7f040006;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int activity_main_list_item=0x7f030001;
-        public static final int activity_map=0x7f030002;
+        public static final int activity_friend=0x7f030000;
+        public static final int activity_friend_list_item=0x7f030001;
+        public static final int activity_group=0x7f030002;
+        public static final int activity_group_list_item=0x7f030003;
+        public static final int activity_login=0x7f030004;
+        public static final int activity_map=0x7f030005;
     }
     public static final class menu {
         public static final int map_menu=0x7f090000;
@@ -232,8 +239,11 @@ containing a value of this type.
         find the service-side assets. [CHAR LIMIT=25] 
          */
         public static final int common_signin_button_text_long=0x7f05000d;
-        public static final int friends=0x7f050013;
-        public static final int groups=0x7f050014;
+        public static final int email=0x7f050013;
+        public static final int friends=0x7f050016;
+        public static final int grouds=0x7f050017;
+        public static final int login=0x7f050015;
+        public static final int password=0x7f050014;
     }
     public static final class style {
         /** 

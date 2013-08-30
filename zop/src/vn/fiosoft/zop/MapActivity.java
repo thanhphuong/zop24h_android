@@ -1,22 +1,20 @@
 package vn.fiosoft.zop;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import vn.fiosoft.zop.data.ZOPLocation;
-import vn.fiosoft.zop.data.ZOPLocationFactory;
 import vn.fiosoft.zop.util.Utils;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,47 +24,47 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends FragmentActivity implements
 		OnCameraChangeListener {
 
-	public static final String KEY_LIST_LOCATION = "listlocation";
-	private final float MIN_ZOOM = 5.0f;
+	public static final int CODE_FRIEND = 1000;
+	public static final int CODE_GROUP = 2000;
+
+	private final float MIN_ZOOM = 18;
+	private final int TIME_WAIT = 16500; // in miliseconds
+	private final int TIME_DOWN = 4000; // in miliseconds
+	private LatLng latLng;
 
 	private GoogleMap mMap;
-	private int mId;
-	private LatLngBounds mBounds;
-	private boolean mUpdateCamemra;
-	private StatusCamera mStatusCamera;
 
-	private enum StatusCamera {
-		Start, End
-	}
+	private boolean mAnimateMyLocation;
+	private Marker mMyMarker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
 
-//		mId = getIntent().getIntExtra(KEY_LIST_LOCATION, 0);
-//		mUpdateCamemra = false;
-		
 		boolean isNetworkConnected = Utils.isNetworkConnected(this);
-		if (isNetworkConnected == false){
+		if (isNetworkConnected == false) {
 			showDialog(1);
 			return;
 		}
-		
-		setUpMapIfNeeded(); 
+
+		mAnimateMyLocation = true;
+
+		setUpMapIfNeeded();
 
 		mMap.setOnCameraChangeListener(this);
 		/* Use the LocationManager class to obtain GPS locations */
 		LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		LocationListener mLocationListener = new MyLocationListener();
-		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-				0, 0, mLocationListener);
+		mLocationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
 	}
 
 	@Override
@@ -139,11 +137,40 @@ public class MapActivity extends FragmentActivity implements
 		// mBounds = builder.build();
 		// mUpdateCamemra = true;
 		// mStatusCamera = StatusCamera.Start;
+		// mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(10,
+		// 10)));
 
+		// startTimer = true;
 	}
+
+	int count = 0;
+	private int mCurrentZoom;
+	boolean startTimer = false;
 
 	@Override
 	public void onCameraChange(CameraPosition position) {
+		// if (startTimer){
+		// mCurrentZoom += 5;
+		// new CountDownTimer(3000, 3000) {
+		//
+		// public void onTick(long millisUntilFinished) {
+		//
+		// }
+		//
+		// public void onFinish() {
+		//
+		//
+		// CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new
+		// LatLng(10, 10), mCurrentZoom);
+		// mMap.animateCamera(cameraUpdate);
+		//
+		// count+=1;
+		// Log.e("test", count + "");
+		// }
+		// }.start();
+		// if (mCurrentZoom >= MIN_ZOOM)
+		// startTimer = false;
+		// }
 		// TODO Auto-generated method stub
 
 		// switch (mStatusCamera) {
@@ -173,31 +200,99 @@ public class MapActivity extends FragmentActivity implements
 		// }
 		// }
 	}
-	
+
 	@Override
-	protected Dialog onCreateDialog(int id) {	
+	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Network failure")
-        	   .setMessage("This application requires a working data connection.")
-               .setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       finish();
-                   }
-               });
+		builder.setTitle("Network failure")
+				.setMessage(
+						"This application requires a working data connection.")
+				.setPositiveButton("Exit",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								finish();
+							}
+						});
 
 		return builder.create();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.map_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.menu_add_friend:
+			Intent intentFriend = new Intent(MapActivity.this,
+					FriendActivity.class);
+			startActivityForResult(intentFriend, CODE_FRIEND);
+			return true;
+		case R.id.menu_add_group:
+			Intent intentGroup = new Intent(MapActivity.this,
+					GroupActivity.class);
+			startActivityForResult(intentGroup, CODE_GROUP);
+			return true;
+		case R.id.menu_help:
+
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 1) {
+
+			if (resultCode == RESULT_OK) {
+				String result = data.getStringExtra("result");
+			}
+			if (resultCode == RESULT_CANCELED) {
+				// Write your code if there's no result
+			}
+		}
 	}
 
 	public class MyLocationListener implements LocationListener {
 
 		@Override
 		public void onLocationChanged(Location location) {
-			Log.e("test", "test");
-			LatLng latLng = new LatLng(location.getLatitude(), location
-					.getLongitude());
-			mMap.clear();
-			mMap.addMarker(new MarkerOptions().position(latLng).title("My Location"));
-			mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+			latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+			if (mAnimateMyLocation == true && latLng != null) {
+				mAnimateMyLocation = false;
+				mMyMarker = null;
+				mCurrentZoom = 0;
+				new CountDownTimer(TIME_WAIT, TIME_DOWN) {
+
+					public void onTick(long millisUntilFinished) {
+						CameraUpdate cameraUpdate = CameraUpdateFactory
+								.newLatLngZoom(latLng, mCurrentZoom);
+						mMap.animateCamera(cameraUpdate);
+						mCurrentZoom += 6;
+					}
+
+					public void onFinish() {						
+						mMyMarker = mMap.addMarker(new MarkerOptions()
+								.position(latLng).title("My Location"));
+					}
+				}.start();
+			} else {
+				if (mMyMarker != null){
+					mMyMarker.remove();
+					mMyMarker = mMap.addMarker(new MarkerOptions().position(latLng)
+						.title("My Location"));
+				}
+						
+
+			}
 		}
 
 		@Override

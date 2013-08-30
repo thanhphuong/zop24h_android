@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class MainAdapter extends ArrayAdapter<Group> {
+public class GroupAdapter extends ArrayAdapter<Group> {
 
 	private Activity mActivity;
 	private int mResourceId;
 
-	public MainAdapter(Activity activity, int resourceId, List<Group> objects) {
+	public GroupAdapter(Activity activity, int resourceId, List<Group> objects) {
 		super(activity, resourceId, objects);
 		mActivity = activity;
 		mResourceId = resourceId;
