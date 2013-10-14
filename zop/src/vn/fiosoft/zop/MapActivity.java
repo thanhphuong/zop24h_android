@@ -1,5 +1,14 @@
 package vn.fiosoft.zop;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import vn.fiosoft.zop.accounts.LoginActivity;
+import vn.fiosoft.zop.data.Account;
+import vn.fiosoft.zop.data.AccountStorage;
+import vn.fiosoft.zop.data.Friend;
+import vn.fiosoft.zop.data.FriendFactory;
+import vn.fiosoft.zop.data.Group;
 import vn.fiosoft.zop.util.Utils;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,11 +25,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.android.gms.common.data.Freezable;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -33,15 +44,25 @@ public class MapActivity extends FragmentActivity implements
 	public static final int CODE_FRIEND = 1000;
 	public static final int CODE_GROUP = 2000;
 
+	private static final int DIALOG_ERROR_WIFI = 4000;
+	private static final int DIALOG_RADAR = 4001;
+
 	private final float MIN_ZOOM = 18;
 	private final int TIME_WAIT = 16500; // in miliseconds
-	private final int TIME_DOWN = 4000; // in miliseconds
-	private LatLng latLng;
+	private final int TIME_DOWN = 4000; // in miliseconds	
+	private int mCurrentZoom;
 
 	private GoogleMap mMap;
 
-	private boolean mAnimateMyLocation;
+	private boolean mAnimateMyLocation;	
 	private Marker mMyMarker;
+	
+	private Account mAccount;	
+	
+	private List<Friend> friends;
+	private boolean isNeedUpdateMap;
+	
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +71,20 @@ public class MapActivity extends FragmentActivity implements
 
 		boolean isNetworkConnected = Utils.isNetworkConnected(this);
 		if (isNetworkConnected == false) {
-			showDialog(1);
+			showDialog(DIALOG_ERROR_WIFI);
 			return;
 		}
 
-		mAnimateMyLocation = true;
+		isNeedUpdateMap = false;
+		
+		friends = new ArrayList<Friend>();
+		
+		//virtual data		
+		FriendFactory friendFactory = new FriendFactory();
+		friends = friendFactory.list();
 
+		
+		
 		setUpMapIfNeeded();
 
 		mMap.setOnCameraChangeListener(this);
@@ -65,6 +94,12 @@ public class MapActivity extends FragmentActivity implements
 		LocationListener mLocationListener = new MyLocationListener();
 		mLocationManager.requestLocationUpdates(
 				LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
+		
+		AccountStorage accountStorage = new AccountStorage(this);
+		mAccount = accountStorage.getAccount();
+		
+		
+		
 	}
 
 	@Override
@@ -112,115 +147,75 @@ public class MapActivity extends FragmentActivity implements
 	 * This should only be called once and when we are sure that {@link #mMap}
 	 * is not null.
 	 */
-	private void setUpMap() {
-
-		// List<ZOPLocation> locations = new ArrayList<ZOPLocation>();
-		//
-		// if (mId != 0) {
-		// ZOPLocationFactory locationFactory = new ZOPLocationFactory();
-		// locations = locationFactory.list(mId);
-		//
-		// } else {
-		// finish();
-		// }
-		//
-		// LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		// for (ZOPLocation location : locations) {
-		// mMap.addMarker(new MarkerOptions()
-		// .position(
-		// new LatLng(location.getLatitude(), location
-		// .getLongitude())).title(location.getName()));
-		// builder.include(new LatLng(location.getLatitude(), location
-		// .getLongitude()));
-		// }
-		//
-		// mBounds = builder.build();
-		// mUpdateCamemra = true;
-		// mStatusCamera = StatusCamera.Start;
-		// mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(10,
-		// 10)));
-
-		// startTimer = true;
+	private void setUpMap() {		
+		isNeedUpdateMap = true;
 	}
-
-	int count = 0;
-	private int mCurrentZoom;
-	boolean startTimer = false;
+	
+	private void updateMapView(){
+		mMap.clear();
+		LatLng latLng;
+		LatLngBounds.Builder builder = new LatLngBounds.Builder();
+		
+		for (Friend friend : friends){
+			latLng = new LatLng(friend.getLatitude(), friend.getLongitude()); 
+			mMap.addMarker(new MarkerOptions().position(latLng).title(friend.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.yourmarker)));
+			builder.include(latLng);
+		}
+		
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 20);
+		mMap.moveCamera(cameraUpdate);
+	}
+	
 
 	@Override
 	public void onCameraChange(CameraPosition position) {
-		// if (startTimer){
-		// mCurrentZoom += 5;
-		// new CountDownTimer(3000, 3000) {
-		//
-		// public void onTick(long millisUntilFinished) {
-		//
-		// }
-		//
-		// public void onFinish() {
-		//
-		//
-		// CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new
-		// LatLng(10, 10), mCurrentZoom);
-		// mMap.animateCamera(cameraUpdate);
-		//
-		// count+=1;
-		// Log.e("test", count + "");
-		// }
-		// }.start();
-		// if (mCurrentZoom >= MIN_ZOOM)
-		// startTimer = false;
-		// }
-		// TODO Auto-generated method stub
-
-		// switch (mStatusCamera) {
-		// case Start:
-		// mMap.animateCamera(CameraUpdateFactory.newLatLng(mBounds.southwest));
-		// mStatusCamera = StatusCamera.End;
-		// break;
-		//
-		// default:
-		// int padding = 150; // offset from edges of the map in pixels
-		// CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(
-		// mBounds, padding);
-		// mMap.animateCamera(cameraUpdate);
-		// break;
-		// }
-
-		// if (mUpdateCamemra == true){
-		// int padding = 150; // offset from edges of the map in pixels
-		// CameraUpdate cameraUpdate =
-		// CameraUpdateFactory.newLatLngBounds(mBounds, padding);
-		// mMap.animateCamera(cameraUpdate);
-		//
-		// mUpdateCamemra = false;
-		// }else{
-		// if (position.zoom > MIN_ZOOM){
-		// mMap.animateCamera(CameraUpdateFactory.zoomTo(5.0f));
-		// }
-		// }
+		if (isNeedUpdateMap == true){
+			updateMapView();
+			isNeedUpdateMap = false;
+		}
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Network failure")
-				.setMessage(
-						"This application requires a working data connection.")
-				.setPositiveButton("Exit",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								finish();
-							}
-						});
+
+		switch (id) {
+		case DIALOG_ERROR_WIFI:
+
+			builder.setTitle(getString(R.string.network_failure))
+					.setMessage(getString(R.string.network_failure_message))
+					.setPositiveButton(getString(R.string.exit),
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									finish();
+								}
+							});
+			break;
+		case DIALOG_RADAR:
+			break;
+		}
 
 		return builder.create();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.map_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+
+		menu.clear();
+		MenuInflater inflater = getMenuInflater();		
+
+		if (mAccount != null) {
+			inflater.inflate(R.menu.map_menu, menu);
+		} else {
+			inflater.inflate(R.menu.map_menu_not_account, menu);
+		}
 		return true;
 	}
 
@@ -228,6 +223,9 @@ public class MapActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
+		case R.id.menu_login:
+			startActivity(new Intent(this, LoginActivity.class));
+			return true;
 		case R.id.menu_add_friend:
 			Intent intentFriend = new Intent(MapActivity.this,
 					FriendActivity.class);
@@ -261,40 +259,7 @@ public class MapActivity extends FragmentActivity implements
 
 	public class MyLocationListener implements LocationListener {
 
-		@Override
-		public void onLocationChanged(Location location) {
-
-			latLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-			if (mAnimateMyLocation == true && latLng != null) {
-				mAnimateMyLocation = false;
-				mMyMarker = null;
-				mCurrentZoom = 0;
-				new CountDownTimer(TIME_WAIT, TIME_DOWN) {
-
-					public void onTick(long millisUntilFinished) {
-						CameraUpdate cameraUpdate = CameraUpdateFactory
-								.newLatLngZoom(latLng, mCurrentZoom);
-						mMap.animateCamera(cameraUpdate);
-						mCurrentZoom += 6;
-					}
-
-					public void onFinish() {						
-						mMyMarker = mMap.addMarker(new MarkerOptions()
-								.position(latLng).title("My Location"));
-					}
-				}.start();
-			} else {
-				if (mMyMarker != null){
-					mMyMarker.remove();
-					mMyMarker = mMap.addMarker(new MarkerOptions().position(latLng)
-						.title("My Location"));
-				}
-						
-
-			}
-		}
-
+		
 		@Override
 		public void onProviderDisabled(String provider) {
 			// TODO Auto-generated method stub
@@ -311,6 +276,23 @@ public class MapActivity extends FragmentActivity implements
 		public void onStatusChanged(String provider, int status, Bundle extras) {
 			// TODO Auto-generated method stub
 
+		}
+
+		@Override
+		public void onLocationChanged(Location location) {
+			LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+			if (myLatLng == null)
+				return;
+			
+			if (mMyMarker != null)
+				mMyMarker.remove();
+			
+			CameraUpdate cameraUpdate = CameraUpdateFactory
+					.newLatLngZoom(myLatLng, MIN_ZOOM);
+			mMyMarker = mMap.addMarker(new MarkerOptions().position(myLatLng).title("My Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.mymarker)));
+			//mMyMarker.showInfoWindow();
+			mMap.moveCamera(cameraUpdate);
 		}
 
 	}

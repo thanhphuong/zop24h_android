@@ -4,24 +4,19 @@ public class Account {
 	
 	private int id;
 	private String username;
-	private String password;
+	private String password;	
 	
 	public Account(){
 		this.id = 0;
 		this.username = "";
-		this.password = "";
+		this.password = "";		
 	}
 	
 	public Account(int id, String username, String password){
 		this.id = id;
 		this.username = username;
-		this.password = password;
-	}
-	
-	public boolean isExists(){
-		if (this.id == 0)
-			return false;
-		return true;
+		this.password = password;		
+		
 	}
 	
 	public int getId(){
@@ -47,6 +42,4 @@ public class Account {
 	public void setPassword(String password){
 		this.password = password;
 	}
-	
-	
 }

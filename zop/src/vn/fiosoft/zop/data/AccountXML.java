@@ -2,9 +2,7 @@ package vn.fiosoft.zop.data;
 
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -15,7 +13,6 @@ import org.xmlpull.v1.XmlSerializer;
 import android.util.Xml;
 
 public class AccountXML {
-
 	private static final String TAG_ACCOUNT = "account";
 	private static final String TAG_ID = "id";
 	private static final String TAG_USERNAME = "username";
@@ -26,9 +23,12 @@ public class AccountXML {
 	}
 
 	public Account parseXMLToAccount(String xml) {
-		if (xml == null || xml.equals(""))
-			return null;
+
 		Account account = null;
+
+		if (xml == null || xml.equals(""))
+			return account;
+
 		try {
 			// create a XMLReader from SAXParser
 			XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser()
@@ -38,7 +38,7 @@ public class AccountXML {
 			// store handler in XMLReader
 			xmlReader.setContentHandler(saxHandler);
 			// the process starts
-			xmlReader.parse (new InputSource(new StringReader(xml)));
+			xmlReader.parse(new InputSource(new StringReader(xml)));
 			// get the `Employee list`
 			account = saxHandler.getAccount();
 
@@ -47,19 +47,21 @@ public class AccountXML {
 		}
 
 		// return Employee list
+		if (account != null && account.getId() == 0)
+			return null;
 		return account;
 
 	}
 
 	public String parseAccountToXML(Account account) {
 		XmlSerializer serializer = Xml.newSerializer();
-	    StringWriter writer = new StringWriter();
-	    try {
-	        serializer.setOutput(writer);
-	        serializer.startDocument("UTF-8", true);
-	        serializer.startTag("", TAG_ACCOUNT);
-	        
-	        serializer.startTag("", TAG_ID);
+		StringWriter writer = new StringWriter();
+		try {
+			serializer.setOutput(writer);
+			serializer.startDocument("UTF-8", true);
+			serializer.startTag("", TAG_ACCOUNT);
+
+			serializer.startTag("", TAG_ID);
 			serializer.text(String.valueOf(account.getId()));
 			serializer.endTag("", TAG_ID);
 			serializer.startTag("", TAG_USERNAME);
@@ -68,13 +70,14 @@ public class AccountXML {
 			serializer.startTag("", TAG_PASSWORD);
 			serializer.text(account.getPassword());
 			serializer.endTag("", TAG_PASSWORD);
-	        
-	        serializer.endTag("", TAG_ACCOUNT);
-	        serializer.endDocument();
-	        return writer.toString();
-	    } catch (Exception e) {
-	        return "";
-	    } 
+
+			serializer.endTag("", TAG_ACCOUNT);
+
+			serializer.endDocument();
+			return writer.toString();
+		} catch (Exception e) {
+			return "";
+		}
 	}
 
 	class SAXXMLHandler extends DefaultHandler {
@@ -108,7 +111,7 @@ public class AccountXML {
 				throws SAXException {
 			if (qName.equalsIgnoreCase(TAG_ID)) {
 				account.setId(Integer.parseInt(tempVal));
-			}else if (qName.equalsIgnoreCase(TAG_USERNAME)) {
+			} else if (qName.equalsIgnoreCase(TAG_USERNAME)) {
 				account.setUserName(tempVal);
 			} else if (qName.equalsIgnoreCase(TAG_PASSWORD)) {
 				account.setPassword(tempVal);

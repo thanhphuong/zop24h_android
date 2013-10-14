@@ -9,6 +9,6 @@
         android:title="Add Group"/>
     <item
         android:id="@+id/menu_help"
-        android:title="Help"/>
+        android:title="@string/help"/>
 
 </menu>

@@ -7,7 +7,16 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="friends">Friends</string>
-    <string name="grouds">Groups</string>    
+    <string name="grouds">Groups</string>
+    <string name="network_failure">Network failure</string> 
+    <string name="network_failure_message">This application requires a working data connection.</string>
+    <string name="exit">Exit</string>    
+    <string name="help">Help</string>
+    <string name="ok">Ok</string>
+   
+    
+    <string name="the_email_and_password">The email and password is incorrect. Please try again.</string>
+       
     
 
 </resources>
