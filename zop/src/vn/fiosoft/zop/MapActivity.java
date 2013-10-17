@@ -9,21 +9,30 @@ import vn.fiosoft.zop.data.AccountStorage;
 import vn.fiosoft.zop.data.Friend;
 import vn.fiosoft.zop.data.FriendFactory;
 import vn.fiosoft.zop.data.Group;
+import vn.fiosoft.zop.data.ZOPMenuItem;
 import vn.fiosoft.zop.util.Utils;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.google.android.gms.common.data.Freezable;
 import com.google.android.gms.maps.CameraUpdate;
@@ -39,29 +48,30 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapActivity extends FragmentActivity implements
-		OnCameraChangeListener {
+		OnCameraChangeListener, OnClickListener, OnItemClickListener {
 
-	public static final int CODE_FRIEND = 1000;
-	public static final int CODE_GROUP = 2000;
+	
 
 	private static final int DIALOG_ERROR_WIFI = 4000;
 	private static final int DIALOG_RADAR = 4001;
+	
+	private static final int DIALOG_SETTINGS = 5000;
 
-	private final float MIN_ZOOM = 18;
-	private final int TIME_WAIT = 16500; // in miliseconds
-	private final int TIME_DOWN = 4000; // in miliseconds	
-	private int mCurrentZoom;
+	private final float MIN_ZOOM = 18;	
 
 	private GoogleMap mMap;
-
-	private boolean mAnimateMyLocation;	
 	private Marker mMyMarker;
 	
 	private Account mAccount;	
 	
 	private List<Friend> friends;
-	private boolean isNeedUpdateMap;
 	
+	private boolean isNeedUpdateMap;
+	private boolean isShowMyLocation;
+	
+	private List<ZOPMenuItem> menuItems;  
+	
+	private ImageButton buttonMenu;
 	
 
 	@Override
@@ -76,6 +86,7 @@ public class MapActivity extends FragmentActivity implements
 		}
 
 		isNeedUpdateMap = false;
+		isShowMyLocation = false;
 		
 		friends = new ArrayList<Friend>();
 		
@@ -86,8 +97,7 @@ public class MapActivity extends FragmentActivity implements
 		
 		
 		setUpMapIfNeeded();
-
-		mMap.setOnCameraChangeListener(this);
+		
 		/* Use the LocationManager class to obtain GPS locations */
 		LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -98,8 +108,16 @@ public class MapActivity extends FragmentActivity implements
 		AccountStorage accountStorage = new AccountStorage(this);
 		mAccount = accountStorage.getAccount();
 		
+				
 		
+		buttonMenu = (ImageButton) findViewById(R.id.menu);		
 		
+		buttonMenu.setOnClickListener(this);
+		
+		menuItems = new ArrayList<ZOPMenuItem>();
+		menuItems.add(new ZOPMenuItem(ZOPMenuItem.MENU_LOGIN, R.drawable.collections_view_as_grid, getString(R.string.sign_in)));
+		menuItems.add(new ZOPMenuItem(ZOPMenuItem.MENU_HELP, R.drawable.collections_view_as_grid, getString(R.string.help)));
+	
 	}
 
 	@Override
@@ -195,6 +213,15 @@ public class MapActivity extends FragmentActivity implements
 			break;
 		case DIALOG_RADAR:
 			break;
+		case DIALOG_SETTINGS:			
+			ListView listMenu = new ListView(this);
+			listMenu.setBackgroundColor(Color.WHITE);
+			listMenu.setAdapter(new MenuAdapter(this, R.layout.dialog_menu_list_item, menuItems));
+			listMenu.setOnItemClickListener(this);
+			builder.setTitle(getString(R.string.menu))
+					.setView(listMenu);
+					
+			break;	
 		}
 
 		return builder.create();
@@ -227,15 +254,15 @@ public class MapActivity extends FragmentActivity implements
 			startActivity(new Intent(this, LoginActivity.class));
 			return true;
 		case R.id.menu_add_friend:
-			Intent intentFriend = new Intent(MapActivity.this,
-					FriendActivity.class);
-			startActivityForResult(intentFriend, CODE_FRIEND);
-			return true;
+//			Intent intentFriend = new Intent(MapActivity.this,
+//					FriendActivity.class);
+//			startActivityForResult(intentFriend, CODE_FRIEND);
+//			return true;
 		case R.id.menu_add_group:
-			Intent intentGroup = new Intent(MapActivity.this,
-					GroupActivity.class);
-			startActivityForResult(intentGroup, CODE_GROUP);
-			return true;
+//			Intent intentGroup = new Intent(MapActivity.this,
+//					GroupActivity.class);
+//			startActivityForResult(intentGroup, CODE_GROUP);
+//			return true;
 		case R.id.menu_help:
 
 			return true;
@@ -279,22 +306,38 @@ public class MapActivity extends FragmentActivity implements
 		}
 
 		@Override
-		public void onLocationChanged(Location location) {
-			LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-
-			if (myLatLng == null)
-				return;
-			
-			if (mMyMarker != null)
-				mMyMarker.remove();
-			
-			CameraUpdate cameraUpdate = CameraUpdateFactory
-					.newLatLngZoom(myLatLng, MIN_ZOOM);
-			mMyMarker = mMap.addMarker(new MarkerOptions().position(myLatLng).title("My Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.mymarker)));
-			//mMyMarker.showInfoWindow();
-			mMap.moveCamera(cameraUpdate);
+		public void onLocationChanged(Location location) {			
+//			LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+//
+//			if (myLatLng == null)
+//				return;
+//			
+//			if (mMyMarker != null)
+//				mMyMarker.remove();
+//			
+//			CameraUpdate cameraUpdate = CameraUpdateFactory
+//					.newLatLngZoom(myLatLng, MIN_ZOOM);
+//			mMyMarker = mMap.addMarker(new MarkerOptions().position(myLatLng).title("My Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.mymarker)));
+//			//mMyMarker.showInfoWindow();
+//			mMap.moveCamera(cameraUpdate);
 		}
 
+	}
+
+	@Override
+	public void onClick(View v) {		
+		if (v == buttonMenu){
+			showDialog(DIALOG_SETTINGS);
+			return;
+		}
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+		if (menuItems == null)
+			return;
+		ZOPMenuItem menuItem = menuItems.get(position);		
+		
 	}
 
 }
