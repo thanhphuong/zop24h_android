@@ -8,7 +8,6 @@ import vn.fiosoft.zop.data.Account;
 import vn.fiosoft.zop.data.AccountStorage;
 import vn.fiosoft.zop.data.Friend;
 import vn.fiosoft.zop.data.FriendFactory;
-import vn.fiosoft.zop.data.Group;
 import vn.fiosoft.zop.data.ZOPMenuItem;
 import vn.fiosoft.zop.util.Utils;
 import android.app.AlertDialog;
@@ -21,11 +20,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,7 +30,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.google.android.gms.common.data.Freezable;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,8 +42,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+
 public class MapActivity extends FragmentActivity implements
-		OnCameraChangeListener, OnClickListener, OnItemClickListener {
+		OnCameraChangeListener, OnClickListener {
 
 	
 
@@ -67,11 +64,12 @@ public class MapActivity extends FragmentActivity implements
 	private List<Friend> friends;
 	
 	private boolean isNeedUpdateMap;
-	private boolean isShowMyLocation;
+	private boolean isShowMyLocation;	
 	
-	private List<ZOPMenuItem> menuItems;  
 	
 	private ImageButton buttonMenu;
+	private View mapMenu;
+	private boolean isFullScreen;
 	
 
 	@Override
@@ -87,6 +85,7 @@ public class MapActivity extends FragmentActivity implements
 
 		isNeedUpdateMap = false;
 		isShowMyLocation = false;
+		isFullScreen = false;
 		
 		friends = new ArrayList<Friend>();
 		
@@ -109,14 +108,12 @@ public class MapActivity extends FragmentActivity implements
 		mAccount = accountStorage.getAccount();
 		
 				
-		
+		mapMenu = findViewById(R.id.map_menu);
 		buttonMenu = (ImageButton) findViewById(R.id.menu);		
 		
 		buttonMenu.setOnClickListener(this);
 		
-		menuItems = new ArrayList<ZOPMenuItem>();
-		menuItems.add(new ZOPMenuItem(ZOPMenuItem.MENU_LOGIN, R.drawable.collections_view_as_grid, getString(R.string.sign_in)));
-		menuItems.add(new ZOPMenuItem(ZOPMenuItem.MENU_HELP, R.drawable.collections_view_as_grid, getString(R.string.help)));
+		
 	
 	}
 
@@ -213,13 +210,8 @@ public class MapActivity extends FragmentActivity implements
 			break;
 		case DIALOG_RADAR:
 			break;
-		case DIALOG_SETTINGS:			
-			ListView listMenu = new ListView(this);
-			listMenu.setBackgroundColor(Color.WHITE);
-			listMenu.setAdapter(new MenuAdapter(this, R.layout.dialog_menu_list_item, menuItems));
-			listMenu.setOnItemClickListener(this);
-			builder.setTitle(getString(R.string.menu))
-					.setView(listMenu);
+		case DIALOG_SETTINGS:		
+			
 					
 			break;	
 		}
@@ -227,22 +219,20 @@ public class MapActivity extends FragmentActivity implements
 		return builder.create();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		return super.onCreateOptionsMenu(menu);
-	}
-
+	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		menu.clear();
-		MenuInflater inflater = getMenuInflater();		
-
-		if (mAccount != null) {
-			inflater.inflate(R.menu.map_menu, menu);
-		} else {
-			inflater.inflate(R.menu.map_menu_not_account, menu);
-		}
+		getMenuInflater().inflate(R.menu.map_menu, menu);
+		
+		if (isFullScreen == true){			
+			menu.findItem(R.id.menu_full_screen).setVisible(false);
+			menu.findItem(R.id.menu_exit_full_screen).setVisible(true);
+		}else{
+			menu.findItem(R.id.menu_full_screen).setVisible(true);
+			menu.findItem(R.id.menu_exit_full_screen).setVisible(false);
+		}		
 		return true;
 	}
 
@@ -250,25 +240,16 @@ public class MapActivity extends FragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.menu_login:
-			startActivity(new Intent(this, LoginActivity.class));
+		case R.id.menu_full_screen:
+			mapMenu.setVisibility(View.GONE);
+			isFullScreen = true;
 			return true;
-		case R.id.menu_add_friend:
-//			Intent intentFriend = new Intent(MapActivity.this,
-//					FriendActivity.class);
-//			startActivityForResult(intentFriend, CODE_FRIEND);
-//			return true;
-		case R.id.menu_add_group:
-//			Intent intentGroup = new Intent(MapActivity.this,
-//					GroupActivity.class);
-//			startActivityForResult(intentGroup, CODE_GROUP);
-//			return true;
-		case R.id.menu_help:
-
+		case R.id.menu_exit_full_screen:
+			mapMenu.setVisibility(View.VISIBLE);
+			isFullScreen = false;
 			return true;
-		default:
-			return super.onOptionsItemSelected(item);
 		}
+		return true;
 	}
 
 	@Override
@@ -327,17 +308,11 @@ public class MapActivity extends FragmentActivity implements
 	@Override
 	public void onClick(View v) {		
 		if (v == buttonMenu){
-			showDialog(DIALOG_SETTINGS);
+			startActivity(new Intent(this, MapMenuActivity.class));
 			return;
 		}
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-		if (menuItems == null)
-			return;
-		ZOPMenuItem menuItem = menuItems.get(position);		
-		
-	}
+	
 
 }

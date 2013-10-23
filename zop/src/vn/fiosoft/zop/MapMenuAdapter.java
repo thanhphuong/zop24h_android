@@ -10,12 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MenuAdapter extends ArrayAdapter<ZOPMenuItem> {
+public class MapMenuAdapter extends ArrayAdapter<ZOPMenuItem> {
 
 	private Activity mActivity;
 	private int mResourceId;
 
-	public MenuAdapter(Activity activity, int resourceId, List<ZOPMenuItem> objects) {
+	public MapMenuAdapter(Activity activity, int resourceId, List<ZOPMenuItem> objects) {
 		super(activity, resourceId, objects);
 		this.mActivity = activity;
 		this.mResourceId = resourceId;

@@ -36,7 +36,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="vn.fiosoft.zop.MapActivity"           
+            android:name="vn.fiosoft.zop.MapActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,7 +52,10 @@
             android:label="@string/friends" />
         <activity
             android:name="vn.fiosoft.zop.accounts.LoginActivity"
-            android:label="@string/login" />        
+            android:label="@string/login" />
+        <activity
+            android:name="vn.fiosoft.zop.MapMenuActivity"
+            android:theme="@android:style/Theme.Dialog" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
