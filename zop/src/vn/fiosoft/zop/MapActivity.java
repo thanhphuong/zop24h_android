@@ -22,6 +22,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -111,10 +112,7 @@ public class MapActivity extends FragmentActivity implements
 		mapMenu = findViewById(R.id.map_menu);
 		buttonMenu = (ImageButton) findViewById(R.id.menu);		
 		
-		buttonMenu.setOnClickListener(this);
-		
-		
-	
+		buttonMenu.setOnClickListener(this);	
 	}
 
 	@Override
@@ -217,40 +215,7 @@ public class MapActivity extends FragmentActivity implements
 		}
 
 		return builder.create();
-	}
-
-	
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-
-		menu.clear();
-		getMenuInflater().inflate(R.menu.map_menu, menu);
-		
-		if (isFullScreen == true){			
-			menu.findItem(R.id.menu_full_screen).setVisible(false);
-			menu.findItem(R.id.menu_exit_full_screen).setVisible(true);
-		}else{
-			menu.findItem(R.id.menu_full_screen).setVisible(true);
-			menu.findItem(R.id.menu_exit_full_screen).setVisible(false);
-		}		
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.menu_full_screen:
-			mapMenu.setVisibility(View.GONE);
-			isFullScreen = true;
-			return true;
-		case R.id.menu_exit_full_screen:
-			mapMenu.setVisibility(View.VISIBLE);
-			isFullScreen = false;
-			return true;
-		}
-		return true;
-	}
+	}	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

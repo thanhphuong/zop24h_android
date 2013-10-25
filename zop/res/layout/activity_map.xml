@@ -24,7 +24,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" >
-            
         </LinearLayout>
 
         <LinearLayout
@@ -43,21 +42,21 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/device_access_location_found" />
+                android:src="@drawable/social_person" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/collections_view_as_grid" />
+                android:src="@drawable/social_group" />
 
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/collections_view_as_grid" />
+                android:src="@drawable/content_save" />
 
             <ImageButton
                 android:id="@+id/menu"
@@ -66,6 +65,13 @@
                 android:layout_margin="5dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/collections_view_as_grid" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/av_full_screen" />
         </LinearLayout>
     </LinearLayout>
 
