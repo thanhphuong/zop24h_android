@@ -69,6 +69,8 @@ public class MapActivity extends FragmentActivity implements
 	
 	
 	private ImageButton buttonMenu;
+	private ImageButton buttonFullScreen;
+	private ImageButton buttonMyLocation;
 	private View mapMenu;
 	private boolean isFullScreen;
 	
@@ -86,7 +88,7 @@ public class MapActivity extends FragmentActivity implements
 
 		isNeedUpdateMap = false;
 		isShowMyLocation = false;
-		isFullScreen = false;
+		
 		
 		friends = new ArrayList<Friend>();
 		
@@ -110,9 +112,27 @@ public class MapActivity extends FragmentActivity implements
 		
 				
 		mapMenu = findViewById(R.id.map_menu);
-		buttonMenu = (ImageButton) findViewById(R.id.menu);		
+		buttonMenu = (ImageButton) findViewById(R.id.menu);	
+		buttonFullScreen = (ImageButton) findViewById(R.id.full_screen);
+		buttonMyLocation = (ImageButton) findViewById(R.id.my_location);
 		
-		buttonMenu.setOnClickListener(this);	
+		buttonMenu.setOnClickListener(this);
+		buttonFullScreen.setOnClickListener(this);
+		buttonMyLocation.setOnClickListener(this);
+		
+		exitFullScreen();
+	}
+	
+	private void exitFullScreen(){
+		isFullScreen = false;
+		buttonFullScreen.setImageResource(R.drawable.av_full_screen);
+		mapMenu.setVisibility(View.VISIBLE);
+	}
+	
+	private void fullScreen(){
+		isFullScreen = true;
+		buttonFullScreen.setImageResource(R.drawable.av_return_from_full_screen);
+		mapMenu.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -274,6 +294,18 @@ public class MapActivity extends FragmentActivity implements
 	public void onClick(View v) {		
 		if (v == buttonMenu){
 			startActivity(new Intent(this, MapMenuActivity.class));
+			return;
+		}
+		
+		if (v == buttonFullScreen){
+			if (isFullScreen)
+				exitFullScreen();
+			else
+				fullScreen();
+			return;
+		}
+		
+		if (v == buttonMyLocation){
 			return;
 		}
 	}

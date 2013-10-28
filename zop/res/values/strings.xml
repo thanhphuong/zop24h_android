@@ -16,6 +16,8 @@
     <string name="menu">Menu</string>
     <string name="sign_in">Sign in</string>
     
+    <string name="group_">Group :&#160;</string>
+    <string name="my_family">My family</string>
     <string name="full_screen">Full screen</string>
     <string name="exit_full_screen">Eixt full screen</string>
    
