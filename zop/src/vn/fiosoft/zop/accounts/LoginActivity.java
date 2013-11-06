@@ -4,7 +4,7 @@ import vn.fiosoft.http.HttpZOPConnection;
 import vn.fiosoft.zop.MapActivity;
 import vn.fiosoft.zop.R;
 import vn.fiosoft.zop.data.Account;
-import vn.fiosoft.zop.data.AccountStorage;
+import vn.fiosoft.zop.xml.AccountStorage;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

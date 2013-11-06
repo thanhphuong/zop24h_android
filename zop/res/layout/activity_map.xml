@@ -42,6 +42,7 @@
                 android:src="@drawable/device_access_location_found" />
 
             <ImageButton
+                android:id="@+id/list_friend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
@@ -50,6 +51,7 @@
                 android:src="@drawable/social_person" />
 
             <ImageButton
+                android:id="@+id/list_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"

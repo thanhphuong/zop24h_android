@@ -1,5 +1,6 @@
-package vn.fiosoft.zop.data;
+package vn.fiosoft.zop.xml;
 
+import vn.fiosoft.zop.data.Account;
 import vn.fiosoft.zop.util.FileManager;
 import android.content.Context;
 

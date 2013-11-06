@@ -12,12 +12,13 @@
     <string name="network_failure_message">This application requires a working data connection.</string>
     <string name="exit">Exit</string>    
     <string name="help">Help</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="menu">Menu</string>
     <string name="sign_in">Sign in</string>
     
     <string name="group_">Group :&#160;</string>
     <string name="my_family">My family</string>
+    <string name="my_location">My location</string>
     <string name="full_screen">Full screen</string>
     <string name="exit_full_screen">Eixt full screen</string>
    

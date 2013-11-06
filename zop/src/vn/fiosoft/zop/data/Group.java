@@ -1,18 +1,25 @@
 package vn.fiosoft.zop.data;
 
-public class Group {
+import java.io.Serializable;
+import android.graphics.Bitmap;
 
-	private long id;
-	private String name;
+@SuppressWarnings("serial")
+public class Group implements Serializable{
+
+	private int id;
+	private Bitmap image;
+	private String name;	
 	
 	public Group(){
 		this.id = 0;
-		this.name = "";
+		this.image = null;
+		this.name = "";		
 	}
 	
-	public Group(long id, String name){
+	public Group(int id, Bitmap image, String name){
 		this.id = id;
-		this.name = name;
+		this.image = image;
+		this.name = name;		
 	}
 	
 	public void setName(String name) {
@@ -23,12 +30,20 @@ public class Group {
 		return name;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Bitmap getImage() {
+		return image;
+	}
+
+	public void setImage(Bitmap image) {
+		this.image = image;
 	}
 	
 }

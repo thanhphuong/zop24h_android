@@ -1,4 +1,4 @@
-package vn.fiosoft.zop.data;
+package vn.fiosoft.zop.xml;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -9,6 +9,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xmlpull.v1.XmlSerializer;
+
+import vn.fiosoft.zop.data.Account;
 
 import android.util.Xml;
 

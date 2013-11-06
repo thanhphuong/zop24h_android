@@ -190,33 +190,38 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_light=0x7f02001e;
         public static final int content_save=0x7f02001f;
         public static final int device_access_location_found=0x7f020020;
-        public static final int ic_launcher=0x7f020021;
-        public static final int mymarker=0x7f020022;
-        public static final int navigation_collapse=0x7f020023;
-        public static final int navigation_expand=0x7f020024;
-        public static final int social_add_person=0x7f020025;
-        public static final int social_group=0x7f020026;
-        public static final int social_person=0x7f020027;
-        public static final int yourmarker=0x7f020028;
+        public static final int home=0x7f020021;
+        public static final int ic_launcher=0x7f020022;
+        public static final int mymarker=0x7f020023;
+        public static final int navigation_collapse=0x7f020024;
+        public static final int navigation_expand=0x7f020025;
+        public static final int personal=0x7f020026;
+        public static final int social_add_person=0x7f020027;
+        public static final int social_group=0x7f020028;
+        public static final int social_person=0x7f020029;
+        public static final int yourmarker=0x7f02002a;
     }
     public static final class id {
-        public static final int full_screen=0x7f05000d;
+        public static final int full_screen=0x7f050010;
         public static final int hybrid=0x7f050004;
-        public static final int list_menu=0x7f05000e;
-        public static final int login=0x7f050008;
-        public static final int map=0x7f050009;
-        public static final int map_menu=0x7f05000a;
-        public static final int menu=0x7f05000b;
-        public static final int menu_image=0x7f05000f;
-        public static final int menu_item=0x7f050010;
-        public static final int my_location=0x7f05000c;
+        public static final int image=0x7f050006;
+        public static final int list_friend=0x7f05000e;
+        public static final int list_group=0x7f05000f;
+        public static final int list_menu=0x7f050011;
+        public static final int login=0x7f050009;
+        public static final int map=0x7f05000a;
+        public static final int map_menu=0x7f05000b;
+        public static final int menu=0x7f05000c;
+        public static final int menu_image=0x7f050012;
+        public static final int menu_item=0x7f050013;
+        public static final int my_location=0x7f05000d;
         public static final int name=0x7f050005;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
-        public static final int password=0x7f050007;
+        public static final int password=0x7f050008;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
-        public static final int username=0x7f050006;
+        public static final int username=0x7f050007;
     }
     public static final class layout {
         public static final int activity_account_list_item=0x7f030000;
@@ -298,9 +303,9 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f06000e;
         public static final int email=0x7f060017;
         public static final int exit=0x7f06001e;
-        public static final int exit_full_screen=0x7f060026;
+        public static final int exit_full_screen=0x7f060027;
         public static final int friends=0x7f06001a;
-        public static final int full_screen=0x7f060025;
+        public static final int full_screen=0x7f060026;
         public static final int grouds=0x7f06001b;
         public static final int group_=0x7f060023;
         public static final int help=0x7f06001f;
@@ -318,12 +323,13 @@ containing a value of this type.
         public static final int login=0x7f060019;
         public static final int menu=0x7f060021;
         public static final int my_family=0x7f060024;
+        public static final int my_location=0x7f060025;
         public static final int network_failure=0x7f06001c;
         public static final int network_failure_message=0x7f06001d;
         public static final int ok=0x7f060020;
         public static final int password=0x7f060018;
         public static final int sign_in=0x7f060022;
-        public static final int the_email_and_password=0x7f060027;
+        public static final int the_email_and_password=0x7f060028;
     }
     public static final class style {
         /** 

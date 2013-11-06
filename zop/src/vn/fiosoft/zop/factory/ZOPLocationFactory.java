@@ -1,7 +1,9 @@
-package vn.fiosoft.zop.data;
+package vn.fiosoft.zop.factory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import vn.fiosoft.zop.data.ZOPLocation;
 
 public class ZOPLocationFactory {
 	public ZOPLocationFactory(){

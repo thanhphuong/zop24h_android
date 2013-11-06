@@ -3,34 +3,24 @@ package vn.fiosoft.zop;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.fiosoft.zop.accounts.LoginActivity;
 import vn.fiosoft.zop.data.Account;
-import vn.fiosoft.zop.data.AccountStorage;
 import vn.fiosoft.zop.data.Friend;
-import vn.fiosoft.zop.data.FriendFactory;
-import vn.fiosoft.zop.data.ZOPMenuItem;
+import vn.fiosoft.zop.data.Group;
 import vn.fiosoft.zop.util.Utils;
+import vn.fiosoft.zop.xml.AccountStorage;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
-import android.widget.ListView;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,37 +33,36 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+public class MapActivity extends FragmentActivity implements OnCameraChangeListener,
+		OnClickListener {
 
+	private static final int	CODE_ADD_FRIEND		= 1000;
+	private static final int	CODE_CHANGE_GROUP	= 1001;
+	private static final int	DIALOG_ERROR_WIFI	= 4000;
+	private static final int	DIALOG_RADAR		= 4001;
 
-public class MapActivity extends FragmentActivity implements
-		OnCameraChangeListener, OnClickListener {
+	private static final int	DIALOG_SETTINGS		= 5000;
 
-	
+	private final float			MIN_ZOOM			= 18;
 
-	private static final int DIALOG_ERROR_WIFI = 4000;
-	private static final int DIALOG_RADAR = 4001;
-	
-	private static final int DIALOG_SETTINGS = 5000;
+	private GoogleMap			mMap;
+	private Marker				mMyMarker;
 
-	private final float MIN_ZOOM = 18;	
+	private Account				mAccount;
 
-	private GoogleMap mMap;
-	private Marker mMyMarker;
-	
-	private Account mAccount;	
-	
-	private List<Friend> friends;
-	
-	private boolean isNeedUpdateMap;
-	private boolean isShowMyLocation;	
-	
-	
-	private ImageButton buttonMenu;
-	private ImageButton buttonFullScreen;
-	private ImageButton buttonMyLocation;
-	private View mapMenu;
-	private boolean isFullScreen;
-	
+	private List<Friend>		friends;
+
+	private boolean				isNeedUpdateMap;
+	private boolean				isShowMyLocation;
+
+	private ImageButton			buttonMenu;
+	private ImageButton			buttonFullScreen;
+	private ImageButton			buttonMyLocation;
+	private ImageButton			buttonListFriend;
+	private ImageButton			buttonListGroup;
+	private View				mapMenu;
+	private boolean				isFullScreen;
+	private LatLng				myLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,48 +77,45 @@ public class MapActivity extends FragmentActivity implements
 
 		isNeedUpdateMap = false;
 		isShowMyLocation = false;
-		
-		
-		friends = new ArrayList<Friend>();
-		
-		//virtual data		
-		FriendFactory friendFactory = new FriendFactory();
-		friends = friendFactory.list();
 
-		
-		
+		myLocation = null;
+		friends = new ArrayList<Friend>();
+
 		setUpMapIfNeeded();
-		
+
 		/* Use the LocationManager class to obtain GPS locations */
 		LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
 		LocationListener mLocationListener = new MyLocationListener();
-		mLocationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 0, 0, mLocationListener);
-		
+		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
+				mLocationListener);
+
 		AccountStorage accountStorage = new AccountStorage(this);
 		mAccount = accountStorage.getAccount();
-		
-				
+
 		mapMenu = findViewById(R.id.map_menu);
-		buttonMenu = (ImageButton) findViewById(R.id.menu);	
+		buttonMenu = (ImageButton) findViewById(R.id.menu);
 		buttonFullScreen = (ImageButton) findViewById(R.id.full_screen);
 		buttonMyLocation = (ImageButton) findViewById(R.id.my_location);
-		
+		buttonListFriend = (ImageButton) findViewById(R.id.list_friend);
+		buttonListGroup = (ImageButton) findViewById(R.id.list_group);
+
 		buttonMenu.setOnClickListener(this);
 		buttonFullScreen.setOnClickListener(this);
 		buttonMyLocation.setOnClickListener(this);
-		
+		buttonListFriend.setOnClickListener(this);
+		buttonListGroup.setOnClickListener(this);
+
 		exitFullScreen();
 	}
-	
-	private void exitFullScreen(){
+
+	private void exitFullScreen() {
 		isFullScreen = false;
 		buttonFullScreen.setImageResource(R.drawable.av_full_screen);
 		mapMenu.setVisibility(View.VISIBLE);
 	}
-	
-	private void fullScreen(){
+
+	private void fullScreen() {
 		isFullScreen = true;
 		buttonFullScreen.setImageResource(R.drawable.av_return_from_full_screen);
 		mapMenu.setVisibility(View.GONE);
@@ -164,8 +150,8 @@ public class MapActivity extends FragmentActivity implements
 		// map.
 		if (mMap == null) {
 			// Try to obtain the map from the SupportMapFragment.
-			mMap = ((SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.map)).getMap();
+			mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
+					.getMap();
 			// Check if we were successful in obtaining the map.
 			if (mMap != null) {
 				setUpMap();
@@ -180,32 +166,39 @@ public class MapActivity extends FragmentActivity implements
 	 * This should only be called once and when we are sure that {@link #mMap}
 	 * is not null.
 	 */
-	private void setUpMap() {		
+	private void setUpMap() {
 		isNeedUpdateMap = true;
 	}
-	
-	private void updateMapView(){
+
+	private void updateMapView() {
 		mMap.clear();
 		LatLng latLng;
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
-		
-		for (Friend friend : friends){
-			latLng = new LatLng(friend.getLatitude(), friend.getLongitude()); 
-			mMap.addMarker(new MarkerOptions().position(latLng).title(friend.getName()).icon(BitmapDescriptorFactory.fromResource(R.drawable.yourmarker)));
+
+		for (Friend friend : friends) {
+			latLng = new LatLng(friend.getLatitude(), friend.getLongitude());
+			mMap.addMarker(new MarkerOptions().position(latLng).title(friend.getName())
+					.icon(BitmapDescriptorFactory.fromResource(R.drawable.yourmarker)));
 			builder.include(latLng);
 		}
-		
+
+		if (myLocation != null) {
+			mMyMarker = mMap.addMarker(new MarkerOptions().position(myLocation)
+					.title(getString(R.string.my_location))
+					.icon(BitmapDescriptorFactory.fromResource(R.drawable.mymarker)));
+			builder.include(myLocation);
+		}
+
 		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 20);
 		mMap.moveCamera(cameraUpdate);
 	}
-	
 
 	@Override
 	public void onCameraChange(CameraPosition position) {
-		if (isNeedUpdateMap == true){
-			updateMapView();
-			isNeedUpdateMap = false;
-		}
+		// if (isNeedUpdateMap == true) {
+		// updateMapView();
+		// isNeedUpdateMap = false;
+		// }
 	}
 
 	@Override
@@ -214,45 +207,63 @@ public class MapActivity extends FragmentActivity implements
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		switch (id) {
-		case DIALOG_ERROR_WIFI:
+			case DIALOG_ERROR_WIFI:
 
-			builder.setTitle(getString(R.string.network_failure))
-					.setMessage(getString(R.string.network_failure_message))
-					.setPositiveButton(getString(R.string.exit),
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog,
-										int id) {
-									finish();
-								}
-							});
-			break;
-		case DIALOG_RADAR:
-			break;
-		case DIALOG_SETTINGS:		
-			
-					
-			break;	
+				builder.setTitle(getString(R.string.network_failure))
+						.setMessage(getString(R.string.network_failure_message))
+						.setPositiveButton(getString(R.string.exit),
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int id) {
+										finish();
+									}
+								});
+				break;
+			case DIALOG_RADAR:
+				break;
+			case DIALOG_SETTINGS:
+
+				break;
 		}
 
 		return builder.create();
-	}	
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == 1) {
+		if (requestCode == CODE_ADD_FRIEND) {
 
 			if (resultCode == RESULT_OK) {
-				String result = data.getStringExtra("result");
+				Friend friend = (Friend) data.getExtras().get("result");
+				if (friend != null) {
+					friends.add(friend);
+					// update location for friend
+					// update map
+					updateMapView();
+				}
 			}
-			if (resultCode == RESULT_CANCELED) {
-				// Write your code if there's no result
+		}
+		
+		if (requestCode == CODE_CHANGE_GROUP) {
+
+			if (resultCode == RESULT_OK) {
+				Group group = (Group) data.getExtras().get("result");
+				if (group != null) {
+					//clear friends
+					friends.clear();
+					//add friend
+//					int n = group.getCount();
+//					for (int i = 0; i < n; i++)
+//						friends.add(group.getFriend(i));					
+					//update map
+					updateMapView();
+					//start update from web
+				}
 			}
 		}
 	}
 
 	public class MyLocationListener implements LocationListener {
 
-		
 		@Override
 		public void onProviderDisabled(String provider) {
 			// TODO Auto-generated method stub
@@ -272,44 +283,56 @@ public class MapActivity extends FragmentActivity implements
 		}
 
 		@Override
-		public void onLocationChanged(Location location) {			
-//			LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-//
-//			if (myLatLng == null)
-//				return;
-//			
-//			if (mMyMarker != null)
-//				mMyMarker.remove();
-//			
-//			CameraUpdate cameraUpdate = CameraUpdateFactory
-//					.newLatLngZoom(myLatLng, MIN_ZOOM);
-//			mMyMarker = mMap.addMarker(new MarkerOptions().position(myLatLng).title("My Location").icon(BitmapDescriptorFactory.fromResource(R.drawable.mymarker)));
-//			//mMyMarker.showInfoWindow();
-//			mMap.moveCamera(cameraUpdate);
+		public void onLocationChanged(Location location) {
+			if (location != null)
+				myLocation = new LatLng(location.getLatitude(), location.getLongitude());
 		}
 
 	}
 
 	@Override
-	public void onClick(View v) {		
-		if (v == buttonMenu){
+	public void onClick(View v) {
+		if (v == buttonMenu) {
 			startActivity(new Intent(this, MapMenuActivity.class));
 			return;
 		}
-		
-		if (v == buttonFullScreen){
+
+		if (v == buttonFullScreen) {
 			if (isFullScreen)
 				exitFullScreen();
 			else
 				fullScreen();
 			return;
 		}
-		
-		if (v == buttonMyLocation){
+
+		if (v == buttonMyLocation) {
+			moveMyLocation();
 			return;
+		}
+
+		if (v == buttonListFriend) {
+			startActivityForResult(new Intent(this, FriendActivity.class), CODE_ADD_FRIEND);
+			return;
+		}
+
+		if (v == buttonListGroup) {
+			startActivityForResult(new Intent(this, GroupActivity.class), CODE_CHANGE_GROUP);
 		}
 	}
 
-	
+	private void moveMyLocation() {
+		if (myLocation == null)
+			return;
+
+		if (mMyMarker != null)
+			mMyMarker.remove();
+
+		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(myLocation, MIN_ZOOM);
+		mMyMarker = mMap.addMarker(new MarkerOptions().position(myLocation)
+				.title(getString(R.string.my_location))
+				.icon(BitmapDescriptorFactory.fromResource(R.drawable.mymarker)));
+		mMyMarker.showInfoWindow();
+		mMap.moveCamera(cameraUpdate);
+	}
 
 }

@@ -5,8 +5,9 @@ import android.util.Log;
 
 public class GroupTable {
 	// Database table
-	  public static final String TABLE_GROUPS = "groups";
+	  public static final String TABLE_GROUPS = "groupproperties";
 	  public static final String COLUMN_ID = "_id";
+	  public static final String COLUMN_IMAGE = "image";
 	  public static final String COLUMN_NAME = "name";	  
 
 	  // Database creation SQL statement
@@ -14,6 +15,7 @@ public class GroupTable {
 	      + TABLE_GROUPS
 	      + "(" 
 	      + COLUMN_ID + " integer primary key autoincrement, " 
+	      + COLUMN_IMAGE + " BLOB,"
 	      + COLUMN_NAME + " text not null" 
 	      + ");";
 
