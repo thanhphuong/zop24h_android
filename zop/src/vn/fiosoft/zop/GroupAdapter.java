@@ -2,19 +2,19 @@ package vn.fiosoft.zop;
 
 import java.util.List;
 
-import vn.fiosoft.zop.data.Group;
+import vn.fiosoft.zop.dto.GroupDTO;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class GroupAdapter extends ArrayAdapter<Group> {
+public class GroupAdapter extends ArrayAdapter<GroupDTO> {
 
 	private Activity mActivity;
 	private int mResourceId;
 
-	public GroupAdapter(Activity activity, int resourceId, List<Group> objects) {
+	public GroupAdapter(Activity activity, int resourceId, List<GroupDTO> objects) {
 		super(activity, resourceId, objects);
 		mActivity = activity;
 		mResourceId = resourceId;
@@ -43,7 +43,7 @@ public class GroupAdapter extends ArrayAdapter<Group> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		
-		Group group = getItem(position);
+		GroupDTO group = getItem(position);
 		if (group != null){
 			viewHolder.name.setText(group.getName());
 		}

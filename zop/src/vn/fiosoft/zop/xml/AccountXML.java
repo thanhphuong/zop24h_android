@@ -10,7 +10,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xmlpull.v1.XmlSerializer;
 
-import vn.fiosoft.zop.data.Account;
+import vn.fiosoft.zop.dto.AccountDTO;
 
 import android.util.Xml;
 
@@ -24,9 +24,9 @@ public class AccountXML {
 
 	}
 
-	public Account parseXMLToAccount(String xml) {
+	public AccountDTO parseXMLToAccount(String xml) {
 
-		Account account = null;
+		AccountDTO account = null;
 
 		if (xml == null || xml.equals(""))
 			return account;
@@ -55,7 +55,7 @@ public class AccountXML {
 
 	}
 
-	public String parseAccountToXML(Account account) {
+	public String parseAccountToXML(AccountDTO account) {
 		XmlSerializer serializer = Xml.newSerializer();
 		StringWriter writer = new StringWriter();
 		try {
@@ -84,13 +84,13 @@ public class AccountXML {
 
 	class SAXXMLHandler extends DefaultHandler {
 
-		private Account account;
+		private AccountDTO account;
 		private String tempVal;
 
 		public SAXXMLHandler() {
 		}
 
-		public Account getAccount() {
+		public AccountDTO getAccount() {
 			return account;
 		}
 
@@ -100,7 +100,7 @@ public class AccountXML {
 			// reset
 			tempVal = "";
 			if (qName.equalsIgnoreCase(TAG_ACCOUNT)) {
-				account = new Account();
+				account = new AccountDTO();
 			}
 		}
 

@@ -48,8 +48,11 @@
             android:name="vn.fiosoft.zop.GroupActivity"
             android:label="@string/grouds" />
         <activity
-            android:name="vn.fiosoft.zop.FriendActivity"
+            android:name="vn.fiosoft.zop.friends.FriendActivity"
             android:label="@string/friends" />
+         <activity
+            android:name="vn.fiosoft.zop.friends.FriendAddActivity"
+            android:label="@string/add_new_friend" />
         <activity
             android:name="vn.fiosoft.zop.accounts.LoginActivity"
             android:label="@string/login" />

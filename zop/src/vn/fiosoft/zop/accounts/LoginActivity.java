@@ -1,9 +1,9 @@
 package vn.fiosoft.zop.accounts;
 
-import vn.fiosoft.http.HttpZOPConnection;
 import vn.fiosoft.zop.MapActivity;
 import vn.fiosoft.zop.R;
-import vn.fiosoft.zop.data.Account;
+import vn.fiosoft.zop.dto.AccountDTO;
+import vn.fiosoft.zop.http.HttpZOPConnection;
 import vn.fiosoft.zop.xml.AccountStorage;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -65,7 +65,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 					if (mId != 0) {
 
-						Account account = new Account(mId, username, password);
+						AccountDTO account = new AccountDTO(mId, username, password);
 						// save to database
 						AccountStorage accountStorage = new AccountStorage(
 								LoginActivity.this);

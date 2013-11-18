@@ -3,9 +3,14 @@ package vn.fiosoft.zop;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.fiosoft.zop.data.Account;
-import vn.fiosoft.zop.data.Friend;
-import vn.fiosoft.zop.data.Group;
+import vn.fiosoft.zop.bus.FriendBUS;
+import vn.fiosoft.zop.bus.GroupBUS;
+import vn.fiosoft.zop.bus.GroupElementBUS;
+import vn.fiosoft.zop.dto.AccountDTO;
+import vn.fiosoft.zop.dto.FriendDTO;
+import vn.fiosoft.zop.dto.GroupDTO;
+import vn.fiosoft.zop.dto.GroupElementDTO;
+import vn.fiosoft.zop.friends.FriendActivity;
 import vn.fiosoft.zop.util.Utils;
 import vn.fiosoft.zop.xml.AccountStorage;
 import android.app.AlertDialog;
@@ -21,6 +26,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -48,9 +55,9 @@ public class MapActivity extends FragmentActivity implements OnCameraChangeListe
 	private GoogleMap			mMap;
 	private Marker				mMyMarker;
 
-	private Account				mAccount;
+	private AccountDTO				mAccount;
 
-	private List<Friend>		friends;
+	private List<FriendDTO>		friends;
 
 	private boolean				isNeedUpdateMap;
 	private boolean				isShowMyLocation;
@@ -79,7 +86,7 @@ public class MapActivity extends FragmentActivity implements OnCameraChangeListe
 		isShowMyLocation = false;
 
 		myLocation = null;
-		friends = new ArrayList<Friend>();
+		friends = new ArrayList<FriendDTO>();
 
 		setUpMapIfNeeded();
 
@@ -175,7 +182,7 @@ public class MapActivity extends FragmentActivity implements OnCameraChangeListe
 		LatLng latLng;
 		LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
-		for (Friend friend : friends) {
+		for (FriendDTO friend : friends) {
 			latLng = new LatLng(friend.getLatitude(), friend.getLongitude());
 			mMap.addMarker(new MarkerOptions().position(latLng).title(friend.getName())
 					.icon(BitmapDescriptorFactory.fromResource(R.drawable.yourmarker)));
@@ -189,8 +196,13 @@ public class MapActivity extends FragmentActivity implements OnCameraChangeListe
 			builder.include(myLocation);
 		}
 
-		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 20);
-		mMap.moveCamera(cameraUpdate);
+		try {
+			CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(builder.build(), 20);
+			mMap.moveCamera(cameraUpdate);
+		} catch (Exception e) {
+			Toast.makeText(this, getString(R.string.cant_find_location), Toast.LENGTH_LONG).show();
+		}
+		
 	}
 
 	@Override
@@ -233,7 +245,7 @@ public class MapActivity extends FragmentActivity implements OnCameraChangeListe
 		if (requestCode == CODE_ADD_FRIEND) {
 
 			if (resultCode == RESULT_OK) {
-				Friend friend = (Friend) data.getExtras().get("result");
+				FriendDTO friend = (FriendDTO) data.getExtras().get("result");
 				if (friend != null) {
 					friends.add(friend);
 					// update location for friend
@@ -246,14 +258,26 @@ public class MapActivity extends FragmentActivity implements OnCameraChangeListe
 		if (requestCode == CODE_CHANGE_GROUP) {
 
 			if (resultCode == RESULT_OK) {
-				Group group = (Group) data.getExtras().get("result");
+				GroupDTO group = (GroupDTO) data.getExtras().get("result");
 				if (group != null) {
 					//clear friends
 					friends.clear();
 					//add friend
-//					int n = group.getCount();
-//					for (int i = 0; i < n; i++)
-//						friends.add(group.getFriend(i));					
+					FriendBUS friendBUS = new FriendBUS(this);
+					GroupElementBUS groupElementBUS = new GroupElementBUS(this);
+					List<GroupElementDTO> groupElements = groupElementBUS.listAllElementOfGroup(group);
+					FriendDTO friend;
+					int id_friend;
+					int n = groupElements.size();
+					for (int i = 0; i < n; i++){
+						id_friend = groupElements.get(i).getIdFriend();
+						friend = friendBUS.getFriendByID(id_friend);
+						if (friend != null)
+							friends.add(friend);
+						else{
+							//TODO: don't find friend object
+						}	
+					}
 					//update map
 					updateMapView();
 					//start update from web

@@ -1,6 +1,6 @@
 package vn.fiosoft.zop.xml;
 
-import vn.fiosoft.zop.data.Account;
+import vn.fiosoft.zop.dto.AccountDTO;
 import vn.fiosoft.zop.util.FileManager;
 import android.content.Context;
 
@@ -13,7 +13,7 @@ public class AccountStorage {
 		mContext = context;
 	}
 
-	public boolean saveAccount(Account account) {		
+	public boolean saveAccount(AccountDTO account) {		
 		FileManager fileManager = new FileManager();
 		AccountXML accountXML = new AccountXML();
 
@@ -22,7 +22,7 @@ public class AccountStorage {
 		return fileManager.writeToFile(mContext, FILE_ACCOUNT, xml);
 	}
 	
-	public Account getAccount(){
+	public AccountDTO getAccount(){
 		FileManager fileManager = new FileManager();
 		AccountXML accountXML = new AccountXML();
 		

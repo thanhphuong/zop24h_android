@@ -3,8 +3,8 @@ package vn.fiosoft.zop;
 import java.util.Calendar;
 import java.util.List;
 
-import vn.fiosoft.zop.data.Group;
-import vn.fiosoft.zop.factory.GroupFactory;
+import vn.fiosoft.zop.bus.GroupBUS;
+import vn.fiosoft.zop.dto.GroupDTO;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import android.widget.ListView;
 
 public class GroupActivity extends ListActivity {
 	
-	private List<Group>	groups;
-	private GroupFactory	groupFactory;
+	private List<GroupDTO>	groups;
+	private GroupBUS	groupFactory;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -24,12 +24,12 @@ public class GroupActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_group);
 
-		groupFactory = new GroupFactory(this);
+		groupFactory = new GroupBUS(this);
 
-		groupFactory.createGroup(new Group(0, null, "Thanh Phuong"));
-		groupFactory.createGroup(new Group(0, null, "Thanh Phuong"));		
+		groupFactory.create(new GroupDTO(0, null, "Thanh Phuong"));
+		groupFactory.create(new GroupDTO(0, null, "Thanh Phuong"));		
 
-		groups = groupFactory.getAllGroups();
+		groups = groupFactory.listAll();
 		setListAdapter(new GroupAdapter(this, R.layout.activity_group_list_item, groups));
 		ListView listView = getListView();
 
@@ -38,7 +38,7 @@ public class GroupActivity extends ListActivity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if (groups == null)
 					return;
-				Group group = groups.get(position);
+				GroupDTO group = groups.get(position);
 				
 				Bundle extras = new Bundle();
 				extras.putSerializable("result", group);

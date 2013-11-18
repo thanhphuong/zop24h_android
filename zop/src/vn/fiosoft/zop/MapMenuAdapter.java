@@ -2,7 +2,7 @@ package vn.fiosoft.zop;
 
 import java.util.List;
 
-import vn.fiosoft.zop.data.ZOPMenuItem;
+import vn.fiosoft.zop.dto.MenuItemDTO;
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MapMenuAdapter extends ArrayAdapter<ZOPMenuItem> {
+public class MapMenuAdapter extends ArrayAdapter<MenuItemDTO> {
 
 	private Activity mActivity;
 	private int mResourceId;
 
-	public MapMenuAdapter(Activity activity, int resourceId, List<ZOPMenuItem> objects) {
+	public MapMenuAdapter(Activity activity, int resourceId, List<MenuItemDTO> objects) {
 		super(activity, resourceId, objects);
 		this.mActivity = activity;
 		this.mResourceId = resourceId;
@@ -43,7 +43,7 @@ public class MapMenuAdapter extends ArrayAdapter<ZOPMenuItem> {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
 		
-		ZOPMenuItem menuItem = getItem(position);
+		MenuItemDTO menuItem = getItem(position);
 		if (menuItem != null){
 			viewHolder.item.setText(menuItem.getItem());
 			viewHolder.image.setImageResource(menuItem.getImage());

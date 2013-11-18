@@ -4,9 +4,12 @@
     <string name="app_name">ZeroCool24h</string>
     <string name="action_settings">Settings</string>
     <string name="email">Email</string>
+    <string name="user_name">Username</string>
     <string name="password">Password</string>
+    <string name="name">Name</string>
     <string name="login">Login</string>
     <string name="friends">Friends</string>
+    <string name="add_new_friend">Add New Friend</string>
     <string name="grouds">Groups</string>
     <string name="network_failure">Network failure</string> 
     <string name="network_failure_message">This application requires a working data connection.</string>
@@ -15,15 +18,18 @@
     <string name="ok">OK</string>
     <string name="menu">Menu</string>
     <string name="sign_in">Sign in</string>
+    <string name="add_new_friend">Add new Friend</string>
+    <string name="add_to_list">Add to List</string>
     
     <string name="group_">Group :&#160;</string>
     <string name="my_family">My family</string>
     <string name="my_location">My location</string>
     <string name="full_screen">Full screen</string>
-    <string name="exit_full_screen">Eixt full screen</string>
+    <string name="exit_full_screen">Eixt full screen</string>    
    
     
     <string name="the_email_and_password">The email and password is incorrect. Please try again.</string>
+    <string name="cant_find_location">Can\'t find location. Please check 3g or wifi again !</string>
        
     
 
